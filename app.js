@@ -1338,6 +1338,10 @@ async function handleSubmit(e) {
   ).join('\n\n');
 
   const payload = {
+    company_name:           'Emergency Housing Group',
+    company:                'Emergency Housing Group',
+    brand:                  'Emergency Housing Group',
+    source:                 'Emergency Housing Group Maintenance Portal',
     name:                   document.getElementById('name').value.trim(),
     email:                  document.getElementById('email').value.trim(),
     phone:                  document.getElementById('phone').value.trim(),

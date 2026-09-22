@@ -198,8 +198,12 @@ try {
     }
 
     /* ── 2. Forward to Make.com webhook (pure JSON, no files) ──────────── */
-    // Because files are Supabase URLs in the payload, the body is tiny and
-    // Make.com's 5 MB limit can never be hit again.
+    // Ensure company identifier is always present in Make.com payload
+    $payload['company_name'] = $payload['company_name'] ?? 'Emergency Housing Group';
+    $payload['company']      = $payload['company']      ?? 'Emergency Housing Group';
+    $payload['brand']        = $payload['brand']        ?? 'Emergency Housing Group';
+    $payload['source']       = $payload['source']       ?? 'Emergency Housing Group Maintenance Portal';
+
     [$makeResp, $makeCode, $makeErr] = aslm_curl(
         MAKE_WEBHOOK_URL,
         json_encode($payload)

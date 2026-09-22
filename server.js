@@ -51,6 +51,12 @@ async function handleSubmission(req, res) {
         return;
       }
 
+      // Ensure company identifiers are always attached to the payload
+      payload.company_name = payload.company_name || 'Emergency Housing Group';
+      payload.company = payload.company || 'Emergency Housing Group';
+      payload.brand = payload.brand || 'Emergency Housing Group';
+      payload.source = payload.source || 'Emergency Housing Group Maintenance Portal';
+
       const fileUrls = Array.isArray(payload.file_urls) ? payload.file_urls : [];
 
       const dbRecord = {
