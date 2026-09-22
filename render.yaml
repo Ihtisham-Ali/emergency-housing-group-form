@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: emergency-housing-group-form
+    env: node
+    plan: free
+    buildCommand: ""
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000

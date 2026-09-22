@@ -1,0 +1,20 @@
+{
+  "name": "emergency-housing-group-repair-form",
+  "version": "1.0.0",
+  "description": "Emergency Housing Group - Repair & Maintenance Reporting Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "emergency-housing-group",
+    "maintenance",
+    "repairs",
+    "portal"
+  ],
+  "author": "Emergency Housing Group",
+  "license": "ISC"
+}

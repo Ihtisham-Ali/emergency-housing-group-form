@@ -1,0 +1,29 @@
+# Raise PHP upload limits for submit.php so large photos/videos aren't
+# silently rejected before the relay even runs. Namecheap shared hosting
+# defaults are typically much lower than this. Occasional video attachments
+# can be sizeable, so these are set generously.
+<IfModule mod_php.c>
+  php_value upload_max_filesize 500M
+  php_value post_max_size 512M
+  php_value max_execution_time 300
+  php_value max_input_time 300
+  php_value memory_limit 512M
+</IfModule>
+
+# submit.php logs errors to submit_error.log next to it, and writes
+# temporary relay files under ./tmp — both can contain tenant personal
+# data / uploaded photos, so block direct web access to them.
+<FilesMatch "\.log$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^tmp/ - [F,L]
+</IfModule>

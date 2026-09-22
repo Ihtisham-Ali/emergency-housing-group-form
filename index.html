@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report a Repair | Emergency Housing Group</title>
+  <meta name="description"
+    content="Report a repair or maintenance issue at your property. Emergency Housing Group provides safe homes and prompt maintenance support." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=6" />
+</head>
+
+<body>
+  <!-- Alert Modal -->
+  <div id="alert-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-icon" id="modal-icon">⚠️</div>
+      <h3 id="modal-title" class="modal-title"></h3>
+      <p id="modal-message" class="modal-message"></p>
+      <button id="modal-close-btn" class="btn btn-primary modal-btn" onclick="closeModal()">OK, I understand</button>
+    </div>
+  </div>
+
+  <!-- YouTube Video Modal -->
+  <div id="video-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Help video">
+    <div class="video-modal-card">
+      <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">&times;</button>
+      <div class="video-embed-wrap">
+        <iframe id="video-iframe" src="" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Wrapper -->
+  <div class="page-wrapper">
+    <!-- Header -->
+    <header class="form-header">
+      <div class="header-inner">
+        <div class="header-logo">
+          <img src="logo.png" alt="Emergency Housing Group - Providing Homes, Restoring Stability" class="header-logo-img" />
+        </div>
+        <div class="header-badge">Secure Form</div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="form-hero">
+      <div class="hero-inner">
+        <div class="hero-logo-wrap">
+          <img src="logo.png" alt="Emergency Housing Group" class="hero-logo" />
+        </div>
+        <h1 class="hero-title">Report a Repair</h1>
+        <p class="hero-subtitle">Please complete this form to report a repair or maintenance issue at your property.</p>
+        <div class="hero-steps">
+          <div class="hero-step active" id="step-indicator-1"><span>1</span> Your Details</div>
+          <div class="hero-step-divider"></div>
+          <div class="hero-step" id="step-indicator-2"><span>2</span> Issue</div>
+          <div class="hero-step-divider"></div>
+          <div class="hero-step" id="step-indicator-3"><span>3</span> Troubleshoot</div>
+          <div class="hero-step-divider"></div>
+          <div class="hero-step" id="step-indicator-4"><span>4</span> Submit</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form Container -->
+    <main class="form-main">
+      <form id="repair-form" novalidate>
+
+        <!-- STEP 1: Contact Details -->
+        <div class="form-step" id="step-1" style="display:block">
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-num">01</div>
+              <div>
+                <h2 class="step-title">Your Details</h2>
+                <p class="step-desc">Let us know who you are and how to contact you.</p>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="name">Full Name <span class="required-star">*</span></label>
+              <input class="field-input" type="text" id="name" name="name" placeholder="e.g. Sarah Johnson" required
+                autocomplete="name" />
+              <span class="field-error" id="name-error"></span>
+            </div>
+
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label" for="email">Email Address <span class="required-star">*</span></label>
+                <input class="field-input" type="email" id="email" name="email" placeholder="you@example.com" required
+                  autocomplete="email"
+                  oninput="validateEmailInline(this)"
+                  onblur="validateEmailInline(this)" />
+                <span class="field-error" id="email-error"></span>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="phone-digits">Phone Number <span class="required-star">*</span></label>
+                <div class="phone-input-wrap">
+                  <span class="phone-prefix">🇬🇧 +44</span>
+                  <input class="field-input phone-digits-input" type="tel" id="phone-digits"
+                    placeholder="7700 000000" maxlength="13" autocomplete="tel"
+                    oninput="validatePhoneInline(this)" onblur="validatePhoneInline(this)" />
+                </div>
+                <input type="hidden" id="phone" name="phone" />
+                <span class="field-error" id="phone-error"></span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="address-search">Property Address (including postcode) <span
+                  class="required-star">*</span></label>
+              <div class="address-lookup-wrapper">
+                <div class="address-input-wrap">
+                  <span class="address-icon">📍</span>
+                  <input class="field-input address-input" type="text" id="address-search" name="address-search"
+                    placeholder="Start typing your postcode or address…" autocomplete="off" required />
+                  <span class="address-spinner hidden" id="address-spinner">⏳</span>
+                </div>
+                <div class="address-dropdown hidden" id="address-dropdown" role="listbox"></div>
+              </div>
+              <span class="field-error" id="address-error"></span>
+              <div class="address-selected hidden" id="address-selected">
+                <div class="address-selected-inner">
+                  <span class="address-selected-icon">✅</span>
+                  <div>
+                    <div class="address-selected-label">Selected Address</div>
+                    <div class="address-selected-value" id="address-selected-text"></div>
+                  </div>
+                  <button type="button" class="address-change-btn" onclick="clearAddress()">Change</button>
+                </div>
+              </div>
+              <!-- Hidden address fields -->
+              <input type="hidden" id="full-address" name="full_address" />
+              <input type="hidden" id="postcode" name="postcode" />
+              <input type="hidden" id="address-line1" name="address_line_1" />
+              <input type="hidden" id="address-line2" name="address_line_2" />
+              <input type="hidden" id="address-line3" name="address_line_3" />
+              <input type="hidden" id="city" name="city" />
+            </div>
+
+            <div class="step-nav">
+              <button type="button" class="btn btn-primary" onclick="goToStep(2)">Continue <span
+                  class="btn-arrow">→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Issue Type -->
+        <div class="form-step" id="step-2" style="display:none">
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-num">02</div>
+              <div>
+                <h2 class="step-title">Issue Details</h2>
+                <p class="step-desc">Tell us what needs fixing and provide as much detail as possible.</p>
+              </div>
+            </div>
+
+            <!-- Urgent Banner (shown conditionally) -->
+            <div class="urgent-banner hidden" id="urgent-banner">
+              <div class="urgent-banner-icon">🚨</div>
+              <div>
+                <strong>This issue may be urgent</strong> and will be prioritised by the maintenance team.
+                Please provide as much detail as possible and upload clear photos or videos if safe to do so.
+              </div>
+            </div>
+
+            <!-- Emergency Banner for gas/CO -->
+            <div class="emergency-banner hidden" id="emergency-banner">
+              <div class="emergency-banner-icon">☣️</div>
+              <div>
+                <strong>EMERGENCY:</strong> If you suspect a gas leak or carbon monoxide risk,
+                <strong>leave the property immediately</strong>, call the National Gas Emergency line on
+                <strong>0800 111 999</strong> and ensure your safety before continuing.
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="issue-search">Issue Type <span class="required-star">*</span></label>
+              <div class="issue-select-wrap" id="issue-select-wrap">
+                <input class="field-input" type="text" id="issue-search" placeholder="Search or select an issue…"
+                  autocomplete="off" readonly onfocus="openIssueDropdown()" onclick="openIssueDropdown()" />
+                <span class="select-arrow">▾</span>
+                <div class="issue-dropdown hidden" id="issue-dropdown">
+                  <div class="issue-dropdown-search-wrap">
+                    <input class="issue-dropdown-search" id="issue-dropdown-search" type="text"
+                      placeholder="Type to filter issues…" oninput="filterIssues(this.value)" />
+                  </div>
+                  <div class="issue-dropdown-list" id="issue-dropdown-list"></div>
+                </div>
+              </div>
+              <input type="hidden" id="issue-code" name="issue_code" />
+              <input type="hidden" id="issue-label" name="issue_label" />
+              <span class="field-error" id="issue-error"></span>
+            </div>
+
+
+            <!-- Other Issue -->
+            <div class="field-group conditional-field hidden" id="other-issue-group">
+              <label class="field-label" for="other-issue">Please describe the issue <span
+                  class="required-star">*</span></label>
+              <textarea class="field-textarea" id="other-issue" name="other_issue" rows="4"
+                placeholder="Please describe the issue in as much detail as possible…"></textarea>
+              <span class="field-error" id="other-issue-error"></span>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="further-info">Further Information <span
+                  class="required-star">*</span></label>
+              <textarea class="field-textarea" id="further-info" name="further_info" rows="5"
+                placeholder="Please describe: what happened, when it started, which room or area is affected, and whether the issue is getting worse…"
+                required></textarea>
+              <span class="field-error" id="further-info-error"></span>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Photos / Videos of the Issue <span class="required-star">*</span></label>
+              <div class="upload-area" id="upload-area" onclick="document.getElementById('file-upload').click()">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">Click to upload or drag &amp; drop</div>
+                <div class="upload-sub">Supports images and videos · Multiple files allowed</div>
+                <input type="file" id="file-upload" name="files" multiple accept="image/*,video/*" class="hidden"
+                  onchange="handleFiles(this.files)" />
+              </div>
+              <div class="upload-previews" id="upload-previews"></div>
+              <span class="field-error" id="upload-error"></span>
+            </div>
+
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" onclick="goToStep(1)">← Back</button>
+              <button type="button" class="btn btn-primary" onclick="goToStep(3)">Continue <span
+                  class="btn-arrow">→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Troubleshooting -->
+        <div class="form-step" id="step-3" style="display:none">
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-num">03</div>
+              <div>
+                <h2 class="step-title">Troubleshooting</h2>
+                <p class="step-desc">Help us understand the issue better with a few quick questions.</p>
+              </div>
+            </div>
+
+            <div id="troubleshoot-container">
+              <!-- Dynamically rendered troubleshooting questions -->
+            </div>
+
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" onclick="goToStep(2)">← Back</button>
+              <button type="button" class="btn btn-primary" onclick="goToStep(4)">Continue <span
+                  class="btn-arrow">→</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Review & Submit -->
+        <div class="form-step" id="step-4" style="display:none">
+          <div class="step-card">
+            <div class="step-card-header">
+              <div class="step-num">04</div>
+              <div>
+                <h2 class="step-title">Review &amp; Submit</h2>
+                <p class="step-desc">Please check your details before submitting your repair report.</p>
+              </div>
+            </div>
+
+            <div class="review-grid" id="review-grid"></div>
+
+            <!-- Hidden internal fields -->
+            <input type="hidden" id="engineer_required" name="engineer_required" value="false" />
+            <input type="hidden" id="request_closed" name="request_closed" value="false" />
+            <input type="hidden" id="responsibility_type" name="responsibility_type" value="" />
+            <input type="hidden" id="priority" name="priority" value="normal" />
+            <input type="hidden" id="alert_type" name="alert_type" value="" />
+            <input type="hidden" id="troubleshooting_path" name="troubleshooting_path" value="" />
+            <input type="hidden" id="final_action" name="final_action" value="" />
+            <input type="hidden" id="submitted_at" name="submitted_at" value="" />
+
+            <div class="field-group" style="margin-top:1.5rem">
+              <label class="checkbox-label">
+                <input type="checkbox" id="consent-check" required />
+                <span>I confirm that the information provided is accurate and I consent to this report being reviewed by
+                  the maintenance team.</span>
+              </label>
+              <span class="field-error" id="consent-error"></span>
+            </div>
+
+            <div class="upload-progress-wrap hidden" id="upload-progress-wrap">
+              <div class="upload-progress-track">
+                <div class="upload-progress-fill" id="upload-progress-fill"></div>
+              </div>
+              <div class="upload-progress-label" id="upload-progress-label">Uploading… 0%</div>
+            </div>
+
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" onclick="goBackFromReview()">← Back</button>
+              <button type="submit" class="btn btn-submit" id="submit-btn">
+                <span id="submit-text">Submit Report</span>
+                <span id="submit-spinner" class="hidden">⏳ Submitting…</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5: Confirmation -->
+        <div class="form-step" id="step-5" style="display:none">
+          <div class="step-card confirmation-card">
+            <div class="confirm-icon" id="confirm-icon">✅</div>
+            <h2 class="confirm-title" id="confirm-title">Report Submitted Successfully</h2>
+            <p class="confirm-message" id="confirm-message"></p>
+            <div class="confirm-note" id="confirm-note"></div>
+
+            <button type="button" class="btn btn-primary" onclick="resetForm()" style="margin-top:2rem">Submit Another
+              Report</button>
+          </div>
+        </div>
+
+      </form>
+    </main>
+
+    <footer class="form-footer">
+      <p>© 2026 Emergency Housing Group · Secure &amp; Confidential</p>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="data.js?v=6"></script>
+  <script src="app.js?v=6"></script>
+</body>
+
+</html>
